@@ -4,6 +4,7 @@ services:
     image: ghcr.io/joaovitoriasilva/endurain/frontend:latest
     environment:
       - MY_APP_BACKEND_PROTOCOL=https # http or https, default is http
+      - MY_APP_BACKEND_WSPROTO=wss
       - MY_APP_BACKEND_HOST=${DOMAIN} # api host or local ip (example: 192.168.1.10:98), default is localhost:98
       - MY_APP_STRAVA_CLIENT_ID=${STRAVA_CLIENT_ID}
     restart: unless-stopped
@@ -12,7 +13,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=${TRAEFIKNET}
-      - traefik.http.routers.fit.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.fit.rule=Host(`${DOMAIN}`)&&Method(`GET`)&&(PathPrefix(`/logo`)||PathPrefix(`/assets`)||PathRegexp(`^/[^/]*$`))
       - traefik.http.services.fit.loadbalancer.server.port=80
     
   # API logic
@@ -36,7 +37,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=${TRAEFIKNET}
-      - traefik.http.routers.fitapi.rule=Host(`${DOMAIN}`)&&PathPrefix(`/api`)
+      - traefik.http.routers.fitapi.rule=Host(`${DOMAIN}`)
       - traefik.http.services.fitapi.loadbalancer.server.port=80
     restart: unless-stopped
   
