@@ -1,8 +1,8 @@
 # Use an official node runtime as a parent image
-FROM node:20-alpine as build-stage
+FROM node:20-alpine AS build-stage
 
 # Links Docker image with repository
-LABEL org.opencontainers.image.source https://github.com/joaovitoriasilva/endurain
+LABEL org.opencontainers.image.source=https://github.com/joaovitoriasilva/endurain
 
 # Set the working directory to /app
 WORKDIR /app
@@ -18,7 +18,7 @@ COPY app ./
 RUN npm run build
 
 # Use nginx to serve the built app
-FROM nginx:alpine as production-stage
+FROM nginx:alpine AS production-stage
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 COPY nginx-custom.conf /etc/nginx/conf.d/default.conf
@@ -29,6 +29,7 @@ RUN chmod +x /docker-entrypoint.d/frontend_env.sh
 EXPOSE 80
 
 ENV VITE_BACKEND_PROTOCOL=http
+ENV VITE_BACKEND_WSPROTO=ws
 ENV VITE_BACKEND_HOST=localhost:98
 ENV VITE_STRAVA_CLIENT_ID=changeme
 

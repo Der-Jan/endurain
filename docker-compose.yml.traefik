@@ -5,7 +5,7 @@ services:
     environment:
       - MY_APP_BACKEND_PROTOCOL=https # http or https, default is http
       - MY_APP_BACKEND_HOST=${DOMAIN} # api host or local ip (example: 192.168.1.10:98), default is localhost:98
-      - MY_APP_STRAVA_CLIENT_ID=changeme
+      - MY_APP_STRAVA_CLIENT_ID=${STRAVA_CLIENT_ID}
     restart: unless-stopped
     networks:
       traefik:
